@@ -14,6 +14,9 @@
 
     <button id="magicBtn">Clique-moi</button>
     <p id="counter">Nombre de clics : 0</p>
+
+    <p class="clock-label">🕐 Il est</p>
+    <p id="clock" class="clock">--:--:--</p>
   </main>
 
   <script>
@@ -22,6 +25,14 @@
       count++;
       document.getElementById('counter').textContent = 'Nombre de clics : ' + count;
     });
+
+    function updateClock() {
+      const now = new Date();
+      const time = now.toLocaleTimeString('fr-FR');
+      document.getElementById('clock').textContent = time;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
   </script>
 </body>
 </html>
