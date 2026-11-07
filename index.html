@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon petit site</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <h1>👋 Salut !</h1>
+    <p>Bienvenue sur mon petit site de test.</p>
+    <p class="subtitle">Fait avec un peu de HTML, de CSS et une pincée de XML.</p>
+
+    <button id="magicBtn">Clique-moi</button>
+    <p id="counter">Nombre de clics : 0</p>
+  </main>
+
+  <script>
+    let count = 0;
+    document.getElementById('magicBtn').addEventListener('click', () => {
+      count++;
+      document.getElementById('counter').textContent = 'Nombre de clics : ' + count;
+    });
+  </script>
+</body>
+</html>
