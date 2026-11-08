@@ -12,27 +12,104 @@
     <p>Bienvenue sur mon petit site de test.</p>
     <p class="subtitle">Fait avec un peu de HTML, de CSS et une pincée de XML.</p>
 
-    <button id="magicBtn">Clique-moi</button>
-    <p id="counter">Nombre de clics : 0</p>
+    <button id="clickBtn">Clique-moi</button>
+    <p id="clickCount">Nombre de clics : 0</p>
 
     <p class="clock-label">🕐 Il est</p>
-    <p id="clock" class="clock">--:--:--</p>
+    <p id="liveClock" class="clock">--:--:--</p>
+
+    <hr class="divider">
+
+    <p class="clock-label">⏱️ Minuteur</p>
+    <div class="timer">
+      <input type="number" id="timerInput" value="30" min="1" max="9999" class="timer-input">
+      <span class="timer-unit">secondes</span>
+    </div>
+    <p id="timerDisplay" class="timer-display">00:30</p>
+    <div class="timer-buttons">
+      <button id="timerStart" class="btn-timer">Démarrer</button>
+      <button id="timerPause" class="btn-timer" disabled>Pause</button>
+      <button id="timerReset" class="btn-timer" disabled>Réinitialiser</button>
+    </div>
   </main>
 
   <script>
-    let count = 0;
-    document.getElementById('magicBtn').addEventListener('click', () => {
-      count++;
-      document.getElementById('counter').textContent = 'Nombre de clics : ' + count;
+    let clicks = 0;
+    document.getElementById('clickBtn').addEventListener('click', () => {
+      clicks++;
+      document.getElementById('clickCount').textContent = 'Nombre de clics : ' + clicks;
     });
 
-    function updateClock() {
+    function tickClock() {
       const now = new Date();
       const time = now.toLocaleTimeString('fr-FR');
-      document.getElementById('clock').textContent = time;
+      document.getElementById('liveClock').textContent = time;
     }
-    updateClock();
-    setInterval(updateClock, 1000);
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    // --- Minuteur ---
+    let timerInterval = null;
+    let timeLeft = 0;
+
+    const timerInput = document.getElementById('timerInput');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timerStart = document.getElementById('timerStart');
+    const timerPause = document.getElementById('timerPause');
+    const timerReset = document.getElementById('timerReset');
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+
+    function updateTimerDisplay() {
+      timerDisplay.textContent = formatTime(timeLeft);
+    }
+
+    timerStart.addEventListener('click', () => {
+      if (timerInterval) return;
+      if (timeLeft <= 0) {
+        timeLeft = parseInt(timerInput.value, 10) || 0;
+      }
+      timerInput.disabled = true;
+      timerStart.disabled = true;
+      timerPause.disabled = false;
+      timerReset.disabled = false;
+      updateTimerDisplay();
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          timerDisplay.textContent = '⏰ Terminé !';
+          timerInput.disabled = false;
+          timerStart.disabled = false;
+          timerPause.disabled = true;
+        }
+      }, 1000);
+    });
+
+    timerPause.addEventListener('click', () => {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerStart.disabled = false;
+      timerPause.disabled = true;
+    });
+
+    timerReset.addEventListener('click', () => {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timeLeft = 0;
+      timerInput.disabled = false;
+      timerDisplay.textContent = formatTime(parseInt(timerInput.value, 10) || 0);
+      timerStart.disabled = false;
+      timerPause.disabled = true;
+      timerReset.disabled = true;
+    });
   </script>
 </body>
 </html>
