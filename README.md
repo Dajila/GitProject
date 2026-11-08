@@ -11,3 +11,4 @@ Github Repo : https://github.com/Dajila/GitProject
   
   Contributors: 
    - Dajila Povalum Kisten 
+   - Léo Malfait
